@@ -15,26 +15,26 @@ Usage Notes:
 */
 
 -- ====================================================================
--- Checking 'gold.dim_customers'
+-- Checking 'gold.dim_customer'
 -- ====================================================================
--- Check for Uniqueness of Customer Key in gold.dim_customers
+-- Check for Uniqueness of Customer Key in gold.dim_customer
 -- Expectation: No results
 SELECT
     customer_key,
     COUNT(*) AS duplicate_count
-FROM gold.dim_customers
+FROM datalakehouse.gold.dim_customer
 GROUP BY customer_key
 HAVING COUNT(*) > 1;
 
 -- ====================================================================
--- Checking 'gold.dim_products'
+-- Checking 'gold.dim_product'
 -- ====================================================================
--- Check for Uniqueness of Product Key in gold.dim_products
+-- Check for Uniqueness of Product Key in gold.dim_product
 -- Expectation: No results
 SELECT
     product_key,
     COUNT(*) AS duplicate_count
-FROM gold.dim_products
+FROM datalakehouse.gold.dim_product
 GROUP BY product_key
 HAVING COUNT(*) > 1;
 
@@ -43,9 +43,9 @@ HAVING COUNT(*) > 1;
 -- ====================================================================
 -- Check the data model connectivity between fact and dimensions
 SELECT *
-FROM gold.fact_sales f
-LEFT JOIN gold.dim_customers c
+FROM datalakehouse.gold.fact_sales f
+LEFT JOIN datalakehouse.gold.dim_customer c
 ON c.customer_key = f.customer_key
-LEFT JOIN gold.dim_products p
+LEFT JOIN datalakehouse.gold.dim_product p
 ON p.product_key = f.product_key
 WHERE p.product_key IS NULL OR c.customer_key IS NULL

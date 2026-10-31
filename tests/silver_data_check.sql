@@ -32,14 +32,14 @@ Table: silver.crm_cust_info
 -- Check for NULL primary keys
 SELECT
     cst_id
-FROM silver.crm_cust_info
-WHERE prd_id IS NULL;
+FROM datalakehouse.silver.crm_cust_info
+WHERE cst_id IS NULL;
 
 -- Check for duplicate primary keys
 SELECT
     cst_id,
     COUNT(*) AS duplicate_count
-FROM silver.crm_cust_info
+FROM datalakehouse.silver.crm_cust_info
 GROUP BY cst_id
 HAVING COUNT(*) > 1;
 
@@ -52,7 +52,7 @@ HAVING COUNT(*) > 1;
 
 SELECT
     cst_lastname
-FROM silver.crm_cust_info
+FROM datalakehouse.silver.crm_cust_info
 WHERE cst_lastname != TRIM(cst_lastname);
 
 
@@ -64,9 +64,9 @@ WHERE cst_lastname != TRIM(cst_lastname);
 
 
 SELECT DISTINCT
-    cst_gender
-FROM silver.crm_cust_info
-ORDER BY cst_gender;
+    cst_gndr
+FROM datalakehouse.silver.crm_cust_info
+ORDER BY cst_gndr;
 
 
 /*
@@ -83,14 +83,14 @@ Table: silver.crm_prd_info
 -- Check for NULL in primary key
 SELECT
     prd_id
-FROM silver.crm_prd_info
+FROM datalakehouse.silver.crm_prd_info
 WHERE prd_id IS NULL;
 
 -- Check for duplicate primary key
 SELECT
     prd_id,
     COUNT(*) AS duplicate_count
-FROM silver.crm_prd_info
+FROM datalakehouse.silver.crm_prd_info
 GROUP BY prd_id
 HAVING COUNT(*) > 1;
 
@@ -103,7 +103,7 @@ HAVING COUNT(*) > 1;
 
 SELECT
     prd_line
-FROM silver.crm_prd_info
+FROM datalakehouse.silver.crm_prd_info
 WHERE prd_line != TRIM(prd_line);
 
 
@@ -116,7 +116,7 @@ WHERE prd_line != TRIM(prd_line);
 
 SELECT DISTINCT
     prd_line
-FROM silver.crm_prd_info
+FROM datalakehouse.silver.crm_prd_info
 ORDER BY prd_line;
 
 
@@ -128,7 +128,7 @@ ORDER BY prd_line;
 
 
 SELECT prd_id, prd_start_dt, prd_end_dt
-FROM silver.crm_prd_info
+FROM datalakehouse.silver.crm_prd_info
 WHERE prd_start_dt > prd_end_dt;
 
 
@@ -149,7 +149,7 @@ SELECT
     sls_ord_num,
 	sls_prd_key,
     COUNT(*) AS duplicate_count
-FROM silver.crm_sales_details
+FROM datalakehouse.silver.crm_sales_details
 GROUP BY sls_ord_num, sls_prd_key
 HAVING COUNT(*) > 1;
 
@@ -162,7 +162,7 @@ HAVING COUNT(*) > 1;
 
 
 SELECT sls_order_dt, sls_ship_dt, sls_due_dt
-FROM silver.crm_sales_details
+FROM datalakehouse.silver.crm_sales_details
 WHERE sls_order_dt > sls_ship_dt OR sls_order_dt > sls_due_dt ;
 
 
@@ -175,11 +175,11 @@ WHERE sls_order_dt > sls_ship_dt OR sls_order_dt > sls_due_dt ;
 
 SELECT
     s.sls_cust_id
-FROM silver.crm_sales_details AS s
+FROM datalakehouse.silver.crm_sales_details AS s
 WHERE s.sls_cust_id IS NOT NULL
   AND NOT EXISTS (
       SELECT 1
-      FROM silver.crm_cust_info AS c
+      FROM datalakehouse.silver.crm_cust_info AS c
       WHERE c.cst_id = s.sls_cust_id
   );
 
@@ -193,11 +193,11 @@ WHERE s.sls_cust_id IS NOT NULL
 
 SELECT
     s.sls_prd_key
-FROM silver.crm_sales_details AS s
+FROM datalakehouse.silver.crm_sales_details AS s
 WHERE s.sls_prd_key IS NOT NULL
   AND NOT EXISTS (
       SELECT 1
-      FROM silver.crm_prd_info AS p
+      FROM datalakehouse.silver.crm_prd_info AS p
       WHERE p.prd_key = s.sls_prd_key
   );
 
@@ -210,7 +210,7 @@ WHERE s.sls_prd_key IS NOT NULL
 
 SELECT
     sls_order_dt
-FROM silver.crm_sales_details
+FROM datalakehouse.silver.crm_sales_details
 WHERE sls_order_dt IS NOT NULL
   AND (
          sls_order_dt <= 0
@@ -228,7 +228,7 @@ WHERE sls_order_dt IS NOT NULL
 
 SELECT
     sls_due_dt
-FROM silver.crm_sales_details
+FROM datalakehouse.silver.crm_sales_details
 WHERE sls_due_dt IS NOT NULL
   AND (
          sls_due_dt <= 0
@@ -248,10 +248,10 @@ WHERE sls_due_dt IS NOT NULL
 
 
 SELECT sls_sales, sls_quantity, sls_price
-FROM silver.crm_sales_details
+FROM datalakehouse.silver.crm_sales_details
 WHERE sls_sales IS NULL OR sls_quantity IS NULL OR sls_price IS NULL
 	OR sls_sales <= 0 OR sls_quantity <= 0 OR sls_price <= 0
-	OR sls_sales != sls_quantity * sls_price
+	OR sls_sales != sls_quantity * sls_price;
 	
 	
 
@@ -273,10 +273,10 @@ SELECT
     e.cid,
     e.bdate,
     e.gen
-FROM silver.erp_cust_az12 AS e
+FROM datalakehouse.silver.erp_cust_az12 AS e
 WHERE e.cid NOT IN (
     SELECT cst_key
-    FROM silver.crm_cust_info
+    FROM datalakehouse.silver.crm_cust_info
 );
 
 
@@ -289,7 +289,7 @@ WHERE e.cid NOT IN (
 SELECT
     cid,
     bdate
-FROM silver.erp_cust_az12
+FROM datalakehouse.silver.erp_cust_az12
 WHERE bdate < '1910-10-25'
    OR bdate > GETDATE();
 
@@ -303,7 +303,7 @@ WHERE bdate < '1910-10-25'
 SELECT
     cid,
     gen
-FROM silver.erp_cust_az12
+FROM datalakehouse.silver.erp_cust_az12
 WHERE gen <> TRIM(gen);
 
 
@@ -316,7 +316,7 @@ WHERE gen <> TRIM(gen);
 
 SELECT DISTINCT
     gen
-FROM silver.erp_cust_az12;
+FROM datalakehouse.silver.erp_cust_az12;
 
 
 
@@ -336,10 +336,10 @@ Table: silver.erp_loc_a101
 SELECT
     e.cid,
     e.cntry
-FROM silver.erp_loc_a101 AS e
+FROM datalakehouse.silver.erp_loc_a101 AS e
 WHERE e.cid NOT IN (
     SELECT cst_key
-    FROM silver.crm_cust_info
+    FROM datalakehouse.silver.crm_cust_info
 );
 
 
@@ -352,7 +352,7 @@ WHERE e.cid NOT IN (
 
 SELECT DISTINCT
     cntry
-FROM silver.erp_loc_a101;
+FROM datalakehouse.silver.erp_loc_a101;
 
 
 
@@ -371,10 +371,10 @@ Table: silver.erp_px_cat_glv2
 
 SELECT *,
     e.id
-FROM silver.erp_px_cat_glv2 AS e
+FROM datalakehouse.silver.erp_px_cat_glv2 AS e
 WHERE e.id NOT IN (
     SELECT cat_id
-    FROM silver.crm_prd_info
+    FROM datalakehouse.silver.crm_prd_info
 );
 
 
@@ -385,7 +385,7 @@ WHERE e.id NOT IN (
 
 SELECT DISTINCT
     cat
-FROM silver.erp_px_cat_glv2;
+FROM datalakehouse.silver.erp_px_cat_glv2;
 
 
 -- Test: Check for unwanted leading or trailing spaces
@@ -394,5 +394,5 @@ FROM silver.erp_px_cat_glv2;
 
 SELECT
     subcat
-FROM silver.erp_px_cat_glv2
+FROM datalakehouse.silver.erp_px_cat_glv2
 WHERE subcat != TRIM(subcat);
