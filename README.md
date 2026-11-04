@@ -65,11 +65,6 @@ For more details, refer to [docs/requirements.md](docs/requirements.md).
 ```
 data-lakehouse-project/
 │
-├── Codes/                              # SQL scripts for ETL and transformations
-│   ├── bronze/                         # Scripts for extracting and loading raw data
-│   ├── silver/                         # Scripts for cleaning and transforming data
-│   ├── gold/                           # Scripts for creating analytical models
-│
 ├── datasets/                           # Raw datasets used for the project (ERP and CRM data)
 │
 ├── docs/                               # Project documentation and architecture details
@@ -80,6 +75,11 @@ data-lakehouse-project/
 |   ├── data_integration_model.png      # File for the data integration model
 │   ├── data_model.png                  # File for data models (star schema)
 │   ├── naming_conventions.md           # Consistent naming guidelines for tables, columns, and files
+│
+├── notebooks/                          # SQL and Python scripts for ETL and transformations
+│   ├── bronze/                         # Scripts for extracting and loading raw data
+│   ├── silver/                         # Scripts for cleaning and transforming data
+│   ├── gold/                           # Scripts for creating analytical models
 │
 ├── tests/                              # Test scripts and quality files
 │
